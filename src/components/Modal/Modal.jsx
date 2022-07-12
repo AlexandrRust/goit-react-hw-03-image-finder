@@ -1,18 +1,18 @@
 import { Component } from 'react';
-import { Overlay, Modal } from './Modal.styled';
+import { Overlay, ModalForImg } from './Modal.styled';
 import { createPortal } from 'react-dom';
 
 const ModalRoot = document.querySelector('#modal-root');
 
-export class ModalImg extends Component {
+export class Modal extends Component {
   componentDidMount = () => {
-    window.addEventListener('keydown', this.HendleKeydouwn);
+    window.addEventListener('keydown', this.hendleKeydouwn);
   };
   componentWillUnmount = () => {
-    window.removeEventListener('keydown', this.HendleKeydouwn);
+    window.removeEventListener('keydown', this.hendleKeydouwn);
   };
 
-  HendleKeydouwn = e => {
+  hendleKeydouwn = e => {
     if (e.code === 'Escape') {
       this.props.onClose();
     }
@@ -20,7 +20,7 @@ export class ModalImg extends Component {
   render() {
     return createPortal(
       <Overlay className="overlay">
-        <Modal className="modal">{this.props.children}</Modal>
+        <ModalForImg className="modal">{this.props.children}</ModalForImg>
       </Overlay>,
       ModalRoot
     );

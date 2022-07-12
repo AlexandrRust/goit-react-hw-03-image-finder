@@ -6,30 +6,30 @@ import { SearchFormInput } from 'components/SearchForm/SearchFormInput/SearchFor
 
 export class Searchbar extends Component {
   state = {
-    text: '',
+    query: '',
     page: null,
     images: [],
   };
 
   onChange = e => {
-    this.setState({ text: e.currentTarget.value, page: 1 });
+    this.setState({ query: e.currentTarget.value, page: 1 });
   };
 
   onSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state.text.toLowerCase().trim(), this.state.page);
-    this.setState({ text: '' });
+    this.props.onSubmit(this.state.query.toLowerCase().trim(), this.state.page);
+    this.setState({ query: '' });
   };
 
   render() {
-    const { text } = this.state;
+    const { query } = this.state;
     return (
       <SearchbarHeader className="searchbar">
         <SearchForm className="form" onSubmit={this.onSubmit}>
           <SearchFormButton type="submit" className="button" />
           <SearchFormInput
             className="input"
-            value={text}
+            value={query}
             type="text"
             autoComplete="off"
             autoFocus

@@ -1,34 +1,34 @@
 import { Component } from 'react';
 import { Searchbar } from 'components/Searchbar/Searchbar';
 import { AppBox } from 'App.styled';
-import ImageInfo from 'components/ImageInfo/ImageIngo';
-import { ModalImg } from 'components/Modal/Modal';
-import { BtnLodeMore } from 'components/BtnLodeMore/BtnLodeMore.styled';
+import ImageInfo from 'components/ImageInfo/ImageInfo';
+import { Modal } from 'components/Modal/Modal';
+import { BtnLoadMore } from 'components/BtnLoadMore/BtnLoadMore.styled';
 
 export class App extends Component {
   state = {
-    text: '',
+    query: '',
     page: null,
     image: {},
     showModal: false,
     status: '',
   };
 
-  ToggleModal = () => {
+  toggleModal = () => {
     this.setState(({ showModal }) => ({
       showModal: !showModal,
     }));
   };
 
-  HendleSubmit = (text, page) => {
-    this.setState({ text, page });
+  hendleSubmit = (query, page) => {
+    this.setState({ query, page });
   };
 
   getImg = img => {
     this.setState({ image: img });
     this.ToggleModal();
   };
-  HendlePage = () => {
+  hendlePage = () => {
     this.setState(({ page }) => ({
       page: (page += 1),
     }));
@@ -38,25 +38,25 @@ export class App extends Component {
   };
 
   render() {
-    const { text, showModal, image, page, status } = this.state;
+    const { query, showModal, image, page, status } = this.state;
     return (
       <AppBox>
-        <Searchbar onSubmit={this.HendleSubmit} />
+        <Searchbar onSubmit={this.hendleSubmit} />
         <ImageInfo
-          imageName={text}
+          imageName={query}
           page={page}
           getImg={this.getImg}
           getStatus={this.getStatus}
         />
-        {text !== '' && status === 'resolved' && (
-          <BtnLodeMore type="button" onClick={this.HendlePage}>
-            Lode More
-          </BtnLodeMore>
+        {query !== '' && status === 'resolved' && (
+          <BtnLoadMore type="button" onClick={this.hendlePage}>
+            Load More
+          </BtnLoadMore>
         )}
         {showModal && (
-          <ModalImg onClose={this.ToggleModal}>
+          <Modal onClose={this.toggleModal}>
             <img src={image.src} alt={image.alt} />
-          </ModalImg>
+          </Modal>
         )}
       </AppBox>
     );
