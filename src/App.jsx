@@ -73,7 +73,7 @@ export class App extends Component {
   };
 
   render() {
-    const { query, showModal, images, image, page, status } = this.state;
+    const { query, showModal, images, image, status } = this.state;
     let boxStatus;
     if (status === 'idle') {
       boxStatus = 'Введите Имя картинки!!';
