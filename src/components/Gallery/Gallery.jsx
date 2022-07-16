@@ -34,6 +34,7 @@ export const Gallery = ({ images, getItem, status, total }) => {
         </>
       );
     default:
+      return;
   }
 };
 // if (status === 'idle') {
