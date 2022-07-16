@@ -4,18 +4,19 @@ import { Container } from 'components/Container/Container.styled';
 import { Gallery } from 'components/Gallery/Gallery';
 import { Modal } from 'components/Modal/Modal';
 import { BtnLoadMore } from 'components/BtnLoadMore/BtnLoadMore.styled';
-import { GetImages } from 'components/services/img-api';
-import { BallTriangle } from 'react-loader-spinner';
+import { getImages } from 'components/services/img-api';
 import { BoxStatus } from 'components/BoxStatus/BoxStatus.syled';
 
 export class App extends Component {
   state = {
     query: '',
     page: null,
+    total: null,
     images: [],
     image: {},
     showModal: false,
     status: 'idle',
+    error: '',
   };
 
   toggleModal = () => {
@@ -34,7 +35,7 @@ export class App extends Component {
       this.state.page !== prevState.page
     ) {
       this.setState({ status: 'pending' });
-      GetImages(
+      getImages(
         this.state.query,
         this.state.page,
         this.setImages,
@@ -43,17 +44,16 @@ export class App extends Component {
     }
   }
 
-  setImages = data => {
-    if (data.total === 0) {
+  setImages = ({ total, hits }) => {
+    if (total === 0) {
       this.setState({
         status: 'rejected',
       });
     } else {
       this.setState({
+        total,
         images:
-          this.state.page === 1
-            ? [...data.hits]
-            : [...this.state.images, ...data.hits],
+          this.state.page === 1 ? [...hits] : [...this.state.images, ...hits],
         status: 'resolved',
       });
     }
@@ -70,29 +70,34 @@ export class App extends Component {
       page: (page += 1),
     }));
   };
-  hendleError = error => {
-    this.setState({ status: 'rejected' });
+  hendleError = ({ message }) => {
+    this.setState({ error: message, status: 'rejected' });
+    console.log(message);
   };
 
   render() {
-    const { showModal, image, images, status } = this.state;
-
+    const { showModal, image, images, status, total, page, error } = this.state;
     return (
       <Container>
         <Searchbar onSubmit={this.hendleSubmit} />
-        {/* <StatusGallery>{this.hendleStatus}</StatusGallery> */}
-        <Gallery images={images} getItem={this.getImg} status={status} />
-        {status === 'pending' ? (
-          <BoxStatus>
-            <BallTriangle color="#00BFFF" height={80} width={80} />
-          </BoxStatus>
+        {error !== '' ? (
+          <BoxStatus>{error}</BoxStatus>
         ) : (
-          status === 'resolved' && (
+          <Gallery
+            images={images}
+            getItem={this.getImg}
+            status={status}
+            total={total}
+          />
+        )}
+
+        {status === 'resolved' &&
+          total / 20 > 1 &&
+          Math.ceil(total / 20) > page && (
             <BtnLoadMore type="button" onClick={this.hendlePage}>
               Load More
             </BtnLoadMore>
-          )
-        )}
+          )}
         {showModal && (
           <Modal onClose={this.toggleModal}>
             <img src={image.largeImageURL} alt={image.tags} />
